@@ -197,17 +197,20 @@ class MessageHandler:
             # Обработка пользовательских запросов, как и раньше
             self.logger.info(f"Получен запрос от пользователя ID: {user_id}: {user_query}")
             answer, sources = self.chatbot.get_response(user_id, user_query, self.chat_history)
-            self.chat_history[user_id].append((user_query, answer))
+
+            # Заглушка для добавления истории. Но нужно будет менять пайплайн
+            # self.chat_history[user_id].append((user_query, answer))
 
             # Сохраняем запрос и ответ в базе данных
             self.db_handler.save_message(user_id, user_query, answer)
             
             self.logger.info(f"Отправлен ответ пользователю ID: {user_id}: {answer}")
+
             response_text = f"Ответ: {answer}\n\nИсточники:\n"
-            for i, source in enumerate(sources):
-                section = source.metadata.get("section_tag", "N/A")
-                url = source.metadata.get("url", "N/A")
-                response_text += f"Источник {i + 1}: Раздел: {section}, URL: {url}\n"
+            for i, doc in enumerate(sources):
+                section_tag = doc.metadata.get('section_tag')
+                urls = doc.metadata.get('urls')
+                response_text += f"Источник {i + 1}: Раздел: {section_tag}, URL: {urls}\n"
             
             reply_markup = self.create_keyboard()
             self.bot.reply_to(message, response_text, reply_markup=reply_markup)
