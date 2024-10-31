@@ -1,0 +1,38 @@
+[
+    {
+        "id": "1",
+        "message": "Чтобы настроить визуализацию на портале \"Диспетчерская\" в системе Акси.SCADA, выполните следующие шаги:",
+        "media_group": ["./Photo_DB/logo_axi.png", "./Photo_DB/retrieval_augmented_generation_scanario.png"],
+        "url": "https://docs.axitech.ru/books/5-otvety-na-voprosy/page/kak-nastroit-vizualizaciiu-na-portale-dispetcerskaia"
+    },
+    {
+        "id": "2",
+        "message": "Для создания панели на главной странице необходимо выполнить следующие шаги:",
+        "media_group": ["./Photo_DB/9eWimage.png", "./Photo_DB/IbZimage.png"],
+        "url": "https://docs.axitech.ru/books/5-otvety-na-voprosy/page/kak-nastroit-panel-na-glavnoi-stranice"
+    },
+    {
+        "id": "3",
+        "message": "Перейти на вкладку \"Событи\" - \"Текущие\"",
+        "media_group": ["./Photo_DB/9B9image.png", "./Photo_DB/8lkimage.png"],
+        "url": "https://docs.axitech.ru/books/5-otvety-na-voprosy/page/kak-nastraivat-i-izmeniat-filtry-po-sobytiiam"
+    },
+    {
+        "id": "4",
+        "message": "Для настройки таблицы необходимо выполнить следующие шаги: \n Перейти на вкладку \"Таблицы\"",
+        "media_group": ["./Photo_DB/QCLimage.png", "./Photo_DB/iZNimage.png"],
+        "url": "https://docs.axitech.ru/books/5-otvety-na-voprosy/page/kak-nastraivat-vid-tablicy-i-primeniat-filtry"
+    },
+    {
+        "id": "5",
+        "message": "Для настройки вида графиков необходимо выполнить следующие шаги: \n Перейти на вкладку \"Графики\"",
+        "media_group": ["./Photo_DB/Qikimage.png", "./Photo_DB/miLimage.png"],
+        "url": "https://docs.axitech.ru/books/5-otvety-na-voprosy/page/kak-nastraivat-vid-grafikov"
+    },
+    {
+        "id": "6",
+        "message": "Для настройки карты необходимо выполнить следующие шаги: \n Перейти на вкладку \"Карта\"",
+        "media_group": ["./Photo_DB/Zbpimage.png", "./Photo_DB/kjJimage.png"],
+        "url": "https://docs.axitech.ru/books/5-otvety-na-voprosy/page/kak-nastraivat-kartu-i-primeniat-k-nei-filtry"
+    }
+]

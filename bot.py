@@ -12,11 +12,12 @@ def main():
     env = get_env()
     bot_token = env['telegram_bot_token']
     auth = env['giga_auth']
-    db_path = r"C:\Programs\Gpt\Test\Telegram_bot\tizi365.db"
+    db_path = r".\tizi365.db"
+    json_path= r".\response_db.json"
 
     # Инициализация чата и обработчика сообщений
-    chatbot = ChatBot(auth, db_path)
-    message_handler = MessageHandler(bot_token, chatbot)
+    chatbot = ChatBot(auth, db_path, logger)
+    message_handler = MessageHandler(bot_token, chatbot, logger, json_path)
 
     # Запуск бота
     logger.info("Запуск Telegram-бота...")

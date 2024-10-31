@@ -6,9 +6,9 @@ import logging
 import os
 
 class ChatBot:
-    def __init__(self, auth, db_path):
-        self.logger = logging.getLogger(__name__)
-        self.logger.info("Инициализация модели GigaChat...")
+    def __init__(self, auth, db_path, logger):
+        self.logger = logger
+        # self.logger.info("Инициализация модели GigaChat...")
         
         self.llm = GigaChat(credentials=auth, scope="GIGACHAT_API_PERS", model="GigaChat", verify_ssl_certs=False)
         self.vectorstore = Chroma(
@@ -24,6 +24,7 @@ class ChatBot:
         )
 
     def get_response(self, user_id, user_query, chat_history):
+        self.logger.info("Инициализация модели GigaChat...")
         result = self.qa_chain.invoke({"chat_history": chat_history[user_id], "question": user_query})
         answer = result.get("result") or result.get("answer")
         sources = result["source_documents"]
