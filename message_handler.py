@@ -213,7 +213,7 @@ class MessageHandler:
                 response_text += f"Источник {i + 1}: Раздел: {section_tag}, URL: {urls}\n"
             
             reply_markup = self.create_keyboard()
-            self.bot.reply_to(message, response_text, reply_markup=reply_markup)
+            self.bot.reply_to(message, response_text, parse_mode='Markdown', reply_markup=reply_markup)
             return  # Завершаем выполнение, чтобы не вызывался `self.send_text_with_photo`
 
         # Отправляем текст с фото или без
