@@ -14,6 +14,9 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 import logging
 import os
 
+from sympy.codegen.ast import break_
+
+
 class ChatBot:
     def __init__(self, auth, db_path, logger):
         self.logger = logger
@@ -73,19 +76,13 @@ class ChatBot:
 
         self.сhain_history = create_retrieval_chain(history_aware_retriever, combine_docs_chain)
 
-        chat_history = []  # Храним историю общения
 
-        store = {}
+        self.store = {}
 
-        def get_session_history(session_id: str) -> BaseChatMessageHistory:
-            if session_id not in store:
-                store[session_id] = ChatMessageHistory()
-            return store[session_id]
-
-
-
-        #передаем в нашу модель набор документов
-
+        def get_session_history(user_id: str) -> BaseChatMessageHistory:
+            if user_id not in self.store:
+                self.store[user_id] = ChatMessageHistory()
+            return self.store[user_id]
 
         #создание пайплайна RAG
         self.qa_chain = RunnableWithMessageHistory(
@@ -97,10 +94,15 @@ class ChatBot:
         )
 
     def get_response(self, user_id, user_query, chat_history):
-        self.logger.info("Инициализация модели GigaChat...")
 
-        self.result = self.qa_chain.invoke({"input": user_query}, config={"configurable": {"session_id": "abc123"}})
-        answer = self.result['answer']
+            self.logger.info("Инициализация модели GigaChat...")
+            self.result = self.qa_chain.invoke({"input": user_query}, config={"configurable": {"session_id": user_id}})
+            answer = self.result['answer']
+            chat_history = self.result["chat_history"]
+            sources = self.result["context"]
+            return answer, sources, chat_history
 
-        sources = self.result["context"]
-        return answer, sources
+        # очистка истории
+    def clear_session_history(self, user_id: str):
+        if user_id in self.store:
+            self.store[user_id].clear()

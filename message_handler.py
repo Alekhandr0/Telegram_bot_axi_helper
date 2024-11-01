@@ -136,7 +136,7 @@ class MessageHandler:
 
         # Проверяем, не нажал ли пользователь кнопку "Очистить историю"
         if user_query == "Очистить историю":
-            self.chat_history[user_id] = []
+            self.chatbot.clear_session_history(user_id)
             self.logger.info(f"История общения очищена для пользователя ID: {user_id}")
             response_text = "Ваша история общения была очищена."
             reply_markup = self.create_keyboard()
@@ -162,10 +162,7 @@ class MessageHandler:
         elif user_query == "Главное меню":
             response_text = "Вы вернулись на Главное меню."
             reply_markup = self.create_keyboard()  # Возвращаемся в основное меню
-            
 
-        # elif user_query == "1"  or user_query == "2" or user_query == "3" or user_query == "4" or user_query == "5" or user_query == "6" :
-        # elif ((user_query%10)>0):
         elif str(user_query) in id_question:
             faq_data = self.get_data_by_id(user_query)
             if faq_data:
@@ -196,10 +193,8 @@ class MessageHandler:
         else:
             # Обработка пользовательских запросов, как и раньше
             self.logger.info(f"Получен запрос от пользователя ID: {user_id}: {user_query}")
-            answer, sources = self.chatbot.get_response(user_id, user_query, self.chat_history)
+            answer, sources, chat_history = self.chatbot.get_response(user_id, user_query, self.chat_history)
 
-            # Заглушка для добавления истории. Но нужно будет менять пайплайн
-            # self.chat_history[user_id].append((user_query, answer))
 
             # Сохраняем запрос и ответ в базе данных
             self.db_handler.save_message(user_id, user_query, answer)
@@ -207,10 +202,12 @@ class MessageHandler:
             self.logger.info(f"Отправлен ответ пользователю ID: {user_id}: {answer}")
 
             response_text = f"Ответ: {answer}\n\nИсточники:\n"
+            print(chat_history)
             for i, doc in enumerate(sources):
                 section_tag = doc.metadata.get('section_tag')
                 urls = doc.metadata.get('urls')
                 response_text += f"Источник {i + 1}: Раздел: {section_tag}, URL: {urls}\n"
+
             
             reply_markup = self.create_keyboard()
             self.bot.reply_to(message, response_text, parse_mode='Markdown', reply_markup=reply_markup)
