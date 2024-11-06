@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат с ботом</title>
+    <script>
+        async function sendMessage() {
+            const query = document.getElementById("userQuery").value;
+            const userId = "user_123";  // Замените на ID пользователя, если требуется
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        user_id: userId
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Вставляем HTML в ответ
+                    document.getElementById("botAnswer").innerHTML = data.answer;
+                } else {
+                    document.getElementById("botAnswer").innerText = "Ошибка получения ответа.";
+                }
+            } catch (error) {
+                document.getElementById("botAnswer").innerText = "Ошибка соединения с сервером.";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Чат с ботом</h1>
+    <label for="userQuery">Введите ваш вопрос:</label>
+    <input type="text" id="userQuery" required>
+    <button onclick="sendMessage()">Отправить</button>
+
+    <h2>Ответ от бота:</h2>
+    <p id="botAnswer"></p>
+</body>
+</html>
