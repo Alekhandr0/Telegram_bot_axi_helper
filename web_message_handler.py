@@ -43,7 +43,7 @@ class WebMessageHandler:
         for i, doc in enumerate(sources):
             section_tag = doc.metadata.get('section_tag', 'Не указан')
             urls = doc.metadata.get('urls', 'Не указан')
-            response_text += f"Источник {i + 1}: Раздел: {section_tag}, URL: <a href='{urls}'>{urls}</a><br>\n"
+            response_text += f"Источник {i + 1}: Раздел: <a href='{urls}'>{section_tag}</a><br>\n"
             
             # Пробуем использовать атрибут content, если он есть
             serialized_sources.append({

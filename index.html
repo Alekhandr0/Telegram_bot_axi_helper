@@ -1,46 +1,182 @@
 <!DOCTYPE html>
 <html lang="ru">
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1e1e1e;
+}
+
+#chatContainer {
+    width: 30vw; /* 30% от ширины экрана */
+    height: 100vh; /* Полная высота экрана */
+    background-color: #2e2e2e;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 8px 0 0 8px;
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+h1 {
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#chatBox {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    padding-right: 10px;
+}
+
+.message {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.userMessage {
+    justify-content: flex-end;
+}
+
+.botMessage {
+    justify-content: flex-start;
+}
+
+.message p {
+    padding: 10px 15px;
+    border-radius: 15px;
+    color: #ffffff;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.userMessage p {
+    background-color: #4a90e2;
+}
+
+.botMessage p {
+    background-color: #646464;
+}
+
+#userQuery {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #4a90e2;
+    border-radius: 4px;
+    background-color: #1e1e1e;
+    box-sizing: border-box;
+    color: #ffffff;
+}
+
+#sendButton {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #4a90e2;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#sendButton:hover {
+    background-color: #357ABD;
+}
+</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Чат с ботом</title>
-    <script>
-        async function sendMessage() {
-            const query = document.getElementById("userQuery").value;
-            const userId = "user_123";  // Замените на ID пользователя, если требуется
-
-            try {
-                const response = await fetch('/ask', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        query: query,
-                        user_id: userId
-                    })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    // Вставляем HTML в ответ
-                    document.getElementById("botAnswer").innerHTML = data.answer;
-                } else {
-                    document.getElementById("botAnswer").innerText = "Ошибка получения ответа.";
+    <link rel="stylesheet" href="css/styles.css">
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+            async function sendMessage() {
+                const query = document.getElementById("userQuery").value;
+                const userId = "user_123";  // Замените на ID пользователя, если требуется
+    
+                if (!query) return; // Проверка, чтобы не отправлять пустое сообщение
+    
+                const chatBox = document.getElementById("chatBox");
+    
+                // Отображаем сообщение пользователя
+                const userMessageElement = document.createElement("div");
+                userMessageElement.className = "message userMessage";
+                userMessageElement.innerHTML = `<p>${query}</p>`;
+                chatBox.appendChild(userMessageElement);
+                chatBox.scrollTop = chatBox.scrollHeight;
+    
+                document.getElementById("userQuery").value = ""; // Очищаем поле ввода
+    
+                try {
+                    const response = await fetch('/ask', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            query: query,
+                            user_id: userId
+                        })
+                    });
+    
+                    if (response.ok) {
+                        const data = await response.json();
+                        // Отображаем сообщение от бота
+                        const botMessageElement = document.createElement("div");
+                        botMessageElement.className = "message botMessage";
+                        botMessageElement.innerHTML = `<p>${data.answer}</p>`;
+                        chatBox.appendChild(botMessageElement);
+                    } else {
+                        // Ошибка при получении ответа от сервера
+                        const errorElement = document.createElement("div");
+                        errorElement.className = "message botMessage";
+                        errorElement.innerHTML = `<p>Ошибка получения ответа.</p>`;
+                        chatBox.appendChild(errorElement);
+                    }
+                } catch (error) {
+                    // Ошибка соединения с сервером
+                    const errorElement = document.createElement("div");
+                    errorElement.className = "message botMessage";
+                    errorElement.innerHTML = `<p>Ошибка соединения с сервером.</p>`;
+                    chatBox.appendChild(errorElement);
                 }
-            } catch (error) {
-                document.getElementById("botAnswer").innerText = "Ошибка соединения с сервером.";
+    
+                chatBox.scrollTop = chatBox.scrollHeight; // Прокрутка к последнему сообщению
             }
-        }
+    
+            // Обработчик события для клавиши Enter
+            document.getElementById("userQuery").addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault(); // Предотвращаем стандартное поведение (новая строка)
+                    sendMessage(); // Отправляем сообщение
+                }
+            });
+    
+            // Обработчик события для кнопки отправки
+            document.getElementById("sendButton").addEventListener("click", function() {
+                sendMessage(); // Отправляем сообщение по нажатию кнопки
+            });
+        });
     </script>
+    
+    
 </head>
 <body>
-    <h1>Чат с ботом</h1>
-    <label for="userQuery">Введите ваш вопрос:</label>
-    <input type="text" id="userQuery" required>
-    <button onclick="sendMessage()">Отправить</button>
-
-    <h2>Ответ от бота:</h2>
-    <p id="botAnswer"></p>
+    <div id="chatContainer">
+        <h1>Чат с ботом</h1>
+        <div id="chatBox"></div>
+        <input type="text" id="userQuery" placeholder="Введите ваш вопрос..." required>
+        <button id="sendButton" onclick="sendMessage()">Отправить</button>
+    </div>
 </body>
+
 </html>
