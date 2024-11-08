@@ -18,15 +18,15 @@ from sympy.codegen.ast import break_
 
 
 class ChatBot:
-    def __init__(self, auth, db_path, logger):
+    def __init__(self, auth_llm, auth_embed, db_path, logger):
         self.logger = logger
         # self.logger.info("Инициализация модели GigaChat...")
         
-        llm = GigaChat(credentials=auth, scope="GIGACHAT_API_PERS", model="GigaChat", verify_ssl_certs=False)
+        llm = GigaChat(credentials=auth_llm, scope="GIGACHAT_API_PERS", model="GigaChat", verify_ssl_certs=False)
 
         vectorstore = Chroma(
             collection_name="my_collection",
-            embedding_function=GigaChatEmbeddings(credentials=auth, verify_ssl_certs=False),
+            embedding_function=GigaChatEmbeddings(credentials=auth_embed, verify_ssl_certs=False),
             persist_directory=db_path,
         )
 
