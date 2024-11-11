@@ -29,11 +29,13 @@ def main():
     bot_token = env['telegram_bot_token']
     auth_llm = env['giga_auth_llm']
     auth_embed = env['giga_auth_embed']
+    weaviate_url = env['weaviate_url']
+    weaviate_api_key = env['weaviate_api_key']
     db_path = r".\tizi365.db"
     json_path = r".\response_db.json"
 
     # Инициализация чата и обработчиков сообщений
-    chatbot = ChatBot(auth_llm, auth_embed, db_path, logger)
+    chatbot = ChatBot(weaviate_url, weaviate_api_key, auth_llm, auth_embed, db_path, logger)
     message_handler = MessageHandler(bot_token, chatbot, logger, json_path)
     web_message_handler = WebMessageHandler(chatbot, logger, json_path)
 

@@ -136,7 +136,7 @@ class MessageHandler:
 
         # Проверяем, не нажал ли пользователь кнопку "Очистить историю"
         if user_query == "Очистить историю":
-            self.chatbot.clear_session_history(user_id)
+            self.chatbot.clear_chat_history()
             self.logger.info(f"История общения очищена для пользователя ID: {user_id}")
             response_text = "Ваша история общения была очищена."
             reply_markup = self.create_keyboard()
