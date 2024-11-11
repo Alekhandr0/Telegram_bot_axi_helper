@@ -30,10 +30,7 @@ class ChatBot:
         
         llm = GigaChat(credentials=auth_llm, scope="GIGACHAT_API_PERS", model="GigaChat", verify_ssl_certs=False)
 
-        client = weaviate.connect_to_weaviate_cloud(
-            cluster_url=weaviate_url,
-            auth_credentials=Auth.api_key(weaviate_api_key),
-        )
+        client = weaviate.connect_to_local()
 
         vectorstore = WeaviateVectorStore(
             client=client,
